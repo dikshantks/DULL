@@ -1,1 +1,22 @@
 https://tomassetti.me/how-to-create-programming-language/
+
+
+
+
+
+
+---------WHAT WE WILL DO------
+:use cpp or c 
+: write psudo code and look make tokens 
+: tokens 
+    : keywords  
+    : operators 
+    : data types
+    : functions 
+    : seperators 
+    : special symbols
+
+
+:flex/Bison for for parsing or do it on your own 
+    
+:LLVM for compiling
