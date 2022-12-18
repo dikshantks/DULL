@@ -1,0 +1,104 @@
+set -euvx
++ set -euvx
+
+# testwrapper.sh: run a flex test, typically called by a Makefile
+
+# Each test will exercise some feature or aspect of flex. Run the test with any
+# input it may need.
+
+INPUT_DIRECTORY=""
++ INPUT_DIRECTORY=
+INPUT_NAME=""
++ INPUT_NAME=
+INPUT_COUNT=0
++ INPUT_COUNT=0
+USE_REDIRECT=0
++ USE_REDIRECT=0
+DO_COMPARISON=0
++ DO_COMPARISON=0
+
+while getopts :d:i:rt1 OPTION ; do
+    case $OPTION in
+        d) INPUT_DIRECTORY=$OPTARG ;;
+        i)
+            if [ "$INPUT_NAME" = "" ] ; then
+                INPUT_NAME="$OPTARG"
+            else
+                INPUT_NAME="$INPUT_NAME $OPTARG"
+            fi
+            INPUT_COUNT=$(($INPUT_COUNT+1))
+            ;;
+        r) USE_REDIRECT=1 ;;
+        t) USE_TABLES=1 ;;
+        1) DO_COMPARISON=1 ;;
+    esac
+done
++ getopts :d:i:rt1 OPTION
++ case $OPTION in
++ INPUT_DIRECTORY=.
++ getopts :d:i:rt1 OPTION
++ case $OPTION in
++ USE_REDIRECT=1
++ getopts :d:i:rt1 OPTION
+
+shift $(($OPTIND-1))
++ shift 3
+TESTNAME=$1
++ TESTNAME=./ccl
+
+INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename "${TESTNAME%.exe}"`.txt}
+++ basename ./ccl
++ INPUT_NAME=./ccl.txt
+
+if [ $DO_COMPARISON = 1 ] ; then
+    TEST_OUTPUT=`$TESTNAME < $INPUT_NAME`
+    REF_OUTPUT=`$TESTNAME 1 < $INPUT_NAME`
+    test "$TEST_OUTPUT" -eq "$REF_OUTPUT"
+    exit $?
+fi
++ '[' 0 = 1 ']'
+
+if [ $INPUT_COUNT -gt 1 ] ; then
+    $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} ${INPUT_NAME}
+    exit $?
+fi
++ '[' 0 -gt 1 ']'
+
+if [ -f ${INPUT_NAME} ] ; then
+    if [ $USE_REDIRECT = 1 ] ; then
+        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} < $INPUT_NAME
+    else
+        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} $INPUT_NAME
+    fi
+else
+    $TESTNAME
+fi
++ '[' -f ./ccl.txt ']'
++ '[' 1 = 1 ']'
++ ./ccl
+OK: ^alpha:0123456789 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@alpha@
+OK: ^digit:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@digit@
+OK: ^alnum:~!@#$%^&*(){}[]':;"<>,./?\+=_-`@alnum@
+OK: ^upper:abcdefghijklmnopqrstuvwxyz0123456789 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@upper@
+OK: ^lower:ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@lower@
+OK: ^space:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@space@
+OK: ^blank:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@blank@
+OK: ^punct:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF 	Z@punct@
+OK: ^cntrl:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ABCDEF~!@#$%^&*(){}[]':;"<>,./?\+=_-`@cntrl@
+OK: ^xdigit:ghijklmnopqrstuvwxyzGHIJKLMNOPQRSTUVWXYZ 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@xdigit@
+OK: a-d:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@a-d@
+OK: l-xyz:abcdefghijklmnopqrstuvw@l-xyz@
+OK: abcd-bc:aaaaddddaaaa@abcd-bc@
+OK: abcde-b-c:aaaaddddeeee@abcde-b-c@
+OK: ^XY-^XYZ:ZZZZZZZZZZZ@^XY-^XYZ@
+OK: flex line 59. input line 16.
+OK: flex line 60. input line 16.
+OK: ia:AaAa@ia@
+OK: iabc:ABCabcAbCaBc@iabc@
+OK: ia-c:ABCabcAbCaBc@ia-c@
+OK: check-a:a@
+OK: flex line 72. input line 20.
+OK: flex line 74. input line 20.
+OK: flex line 78. input line 20.
+TEST RETURNING OK.
+PASS ccl (exit status: 0)

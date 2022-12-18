@@ -1,0 +1,89 @@
+set -euvx
++ set -euvx
+
+# testwrapper.sh: run a flex test, typically called by a Makefile
+
+# Each test will exercise some feature or aspect of flex. Run the test with any
+# input it may need.
+
+INPUT_DIRECTORY=""
++ INPUT_DIRECTORY=
+INPUT_NAME=""
++ INPUT_NAME=
+INPUT_COUNT=0
++ INPUT_COUNT=0
+USE_REDIRECT=0
++ USE_REDIRECT=0
+DO_COMPARISON=0
++ DO_COMPARISON=0
+
+while getopts :d:i:rt1 OPTION ; do
+    case $OPTION in
+        d) INPUT_DIRECTORY=$OPTARG ;;
+        i)
+            if [ "$INPUT_NAME" = "" ] ; then
+                INPUT_NAME="$OPTARG"
+            else
+                INPUT_NAME="$INPUT_NAME $OPTARG"
+            fi
+            INPUT_COUNT=$(($INPUT_COUNT+1))
+            ;;
+        r) USE_REDIRECT=1 ;;
+        t) USE_TABLES=1 ;;
+        1) DO_COMPARISON=1 ;;
+    esac
+done
++ getopts :d:i:rt1 OPTION
++ case $OPTION in
++ INPUT_DIRECTORY=.
++ getopts :d:i:rt1 OPTION
++ case $OPTION in
++ USE_REDIRECT=1
++ getopts :d:i:rt1 OPTION
+
+shift $(($OPTIND-1))
++ shift 3
+TESTNAME=$1
++ TESTNAME=./debug_nr
+
+INPUT_NAME=${INPUT_NAME:-$INPUT_DIRECTORY/`basename "${TESTNAME%.exe}"`.txt}
+++ basename ./debug_nr
++ INPUT_NAME=./debug_nr.txt
+
+if [ $DO_COMPARISON = 1 ] ; then
+    TEST_OUTPUT=`$TESTNAME < $INPUT_NAME`
+    REF_OUTPUT=`$TESTNAME 1 < $INPUT_NAME`
+    test "$TEST_OUTPUT" -eq "$REF_OUTPUT"
+    exit $?
+fi
++ '[' 0 = 1 ']'
+
+if [ $INPUT_COUNT -gt 1 ] ; then
+    $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} ${INPUT_NAME}
+    exit $?
+fi
++ '[' 0 -gt 1 ']'
+
+if [ -f ${INPUT_NAME} ] ; then
+    if [ $USE_REDIRECT = 1 ] ; then
+        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} < $INPUT_NAME
+    else
+        $TESTNAME ${USE_TABLES:+${INPUT_DIRECTORY}/${TESTNAME%.exe}.tables} $INPUT_NAME
+    fi
+else
+    $TESTNAME
+fi
++ '[' -f ./debug_nr.txt ']'
++ '[' 1 = 1 ']'
++ ./debug_nr
+--(end of buffer or a NUL)
+--accepting rule at line 37 ("Any input will do for this test.")
+--accepting rule at line 38 ("
+")
+--accepting rule at line 37 ("We are only testing if it actually runs in debug mode.")
+--accepting rule at line 38 ("
+")
+--(end of buffer or a NUL)
+--EOF (start condition 0)
+TEST RETURNING OK.
+PASS debug_nr (exit status: 0)

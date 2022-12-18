@@ -1,0 +1,34 @@
+set -euvx
++ set -euvx
+
+# testwrapper-direct.sh: run some specialized flex tests that care where
+# they're run from.
+
+while getopts :b:s: OPTION ; do
+    case $OPTION in
+        b) BINARY_DIR=$OPTARG ;;
+        s) SOURCE_DIR=$OPTARG ;;
+    esac
+    done
++ getopts :b:s: OPTION
++ case $OPTION in
++ BINARY_DIR=/home/dikshant/Desktop/DULL/resources/flex-2.6.4/tests
++ getopts :b:s: OPTION
++ case $OPTION in
++ SOURCE_DIR=.
++ getopts :b:s: OPTION
+
+shift $(($OPTIND-1))
++ shift 4
+TESTNAME=$1
++ TESTNAME=./rescan_nr.direct
+
+INPUT_NAME=`basename "${TESTNAME%.exe}"`.txt
+++ basename ./rescan_nr.direct
++ INPUT_NAME=rescan_nr.direct.txt
+
+cd ${SOURCE_DIR} && ${BINARY_DIR}/${TESTNAME} ${INPUT_NAME}
++ cd .
++ /home/dikshant/Desktop/DULL/resources/flex-2.6.4/tests/./rescan_nr.direct rescan_nr.direct.txt
+TEST RETURNING OK.
+PASS rescan_nr.direct (exit status: 0)
