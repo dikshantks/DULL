@@ -1,9 +1,16 @@
-sNaZZle 1.3
-type foo
-type bar
-type bas
-0 0 10 5        foo
-20 10 30 20     foo
-7 8 12 13       bas
-78 124 100 256  bar
-end
+%{
+  #include <iostream>
+  using namespace std;
+  extern int yylex();
+%}
+%option noyywrap
+%%
+[ \t\n]         ;
+[0-9]+\.[0-9]+  { cout << "Found a floating-point number:" << yytext << endl; }
+[0-9]+          { cout << "Found an integer:" << yytext << endl; }
+[a-zA-Z0-9]+    { cout << "Found a string: " << yytext << endl; }
+%%
+int main(int, char**) {
+  // lex through the input:
+  while (yylex());
+}
