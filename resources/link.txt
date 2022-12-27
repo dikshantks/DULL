@@ -5,7 +5,7 @@ https://tomassetti.me/how-to-create-programming-language/
 :use cpp or c 
 : write psudo code and look make tokens 
 : tokens 
-    : keywords   don
+    : keywords   (done)
     : operators 
     : data types
     : functions 
