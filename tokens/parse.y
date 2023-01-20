@@ -1,0 +1,9 @@
+%{
+%}
+
+%token MAIN SQO SQC PO PC CO CC 
+%token INT CHAR FLOAT  WHILE BOOL STR
+%token IF ELSE COMMENT VOID
+%%
+
+%%
