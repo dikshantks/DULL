@@ -1,13 +1,9 @@
 %{
-
     #include <stdlib.h>
     #include <stdio.h>
-#include <limits.h>
+    #include <limits.h>
     %}
-
 %%
-
-
 "int"            {return INT;}
 "long"           {return LONG;}
 "for"            {return FOR;}
@@ -33,9 +29,5 @@
 "!="		     {return NOT_EQ;}
 .                {return yytext[0];}
 
-
 []
-
-
- /* "->"			                {return PTR_SELECT;} */
 %%
